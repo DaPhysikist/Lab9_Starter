@@ -92,8 +92,15 @@
     window.TrackJS && TrackJS.install({ 
       token: "dadc3c5f5ada4c448a39f8e0c5c7b1bb"
     });
-  </script>
+  </script>           
   <script>
+    class ButtonSetupError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "ButtonSetupError";
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -121,52 +128,68 @@
     let endTmrBtn = errorBtns[12];
     let traceBtn = errorBtns[13];
     let glblErrorBtn = errorBtns[14];
+    let fakeBtn = errorBtns[15];
 
-    logBtn.addEventListener('click', function(){
-      console.log("Insert debugging info.");
-    });
-    errorBtn.addEventListener('click', function(){
-      console.error("Error! Fix this!")
-    });
-    cntBn.addEventListener('click', function(){
-      console.count()
-    });
-    warnBtn.addEventListener('click', function(){
-      console.warn("This could cause erors.");
-    });
-    assertBtn.addEventListener('click', function(){
-      console.assert();
-    });
-    clrBtn.addEventListener('click', function(){
-      console.clear();
-    });
-    dirBtn.addEventListener('click', function(){
-      console.dir();
-    });
-    dirXMLBtn.addEventListener('click', function(){
-      console.dirxml();
-    });
-    grpStartBtn.addEventListener('click', function(){
-      console.group();
-    });
-    grpEndBtn.addEventListener('click', function(){
-      console.groupEnd();
-    });
-    tblBtn.addEventListener('click', function(){
-      console.table(["apples", "oranges", "bananas"]);
-    });
-    startTmrBtn.addEventListener('click', function(){
-      console.time();
-    });
-    endTmrBtn.addEventListener('click', function(){
-      console.timeEnd();
-    });
-    traceBtn.addEventListener('click', function(){
-      console.trace();
-    });
-    glblErrorBtn.addEventListener('click', function(){
-      
-    });
+    try {
+      logBtn.addEventListener('click', function(){
+        console.log("Insert debugging info.");
+      });
+      errorBtn.addEventListener('click', function(){
+        console.error("Error! Fix this!")
+      });
+      cntBn.addEventListener('click', function(){
+        console.count()
+      });
+      warnBtn.addEventListener('click', function(){
+        console.warn("This could cause erors.");
+      });
+      assertBtn.addEventListener('click', function(){
+        console.assert(1 + 1 === 2, "Assertion failed: 1 + 1 does not equal 2");
+        console.assert("1" + "1" === 2, "Assertion failed: '1' + '1' does not equal 2");
+      });
+      clrBtn.addEventListener('click', function(){
+        console.clear();
+      });
+      dirBtn.addEventListener('click', function(){
+        console.dir(form);
+      });
+      dirXMLBtn.addEventListener('click', function(){
+        console.dirxml(form);
+      });
+      grpStartBtn.addEventListener('click', function(){
+        console.group();
+      });
+      grpEndBtn.addEventListener('click', function(){
+        console.groupEnd();
+      });
+      tblBtn.addEventListener('click', function(){
+        console.table(["windows", "macintosh", "linux"]);
+      });
+      startTmrBtn.addEventListener('click', function(){
+        console.time();
+      });
+      endTmrBtn.addEventListener('click', function(){
+        console.timeEnd();
+      });
+      traceBtn.addEventListener('click', function outer(){
+        function inner(){
+          console.trace();
+        }
+        inner();
+      });
+      glblErrorBtn.addEventListener('click', function(){
+        throw new Error("Global error lol");
+      });
+      fakeBtn.addEventListener('click', function(){
+        console.log("Hello World");
+      });
+    }
+    catch (err) {
+      throw new ButtonSetupError(err);
+    }
+    finally {
+      alert("Buttons are set up!");
+    }
 
     // You may move this JS to another file if you wish
   </script>
